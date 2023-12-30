@@ -1,0 +1,37 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+<PageTitle>Anime Cards</PageTitle>
+<div class="main-Title">
+    Memory match
+</div>
+<div class="game-description">
+    You have 10 attempts to match all the cards.
+</div>
+<div class="progress-bar-section">
+    <div class="progress-top-line">
+        <div class="progress-left">
+            Attempts
+        </div>
+        <div class="progress-right">
+            @(NumberOfFailedAttempts / 10)/10
+        </div>
+    </div>
+    <div class="progress-bar" style="--width: @NumberOfFailedAttempts">
+    </div>
+</div>
+@*     <TimerComponent /> *@
+@if (NumberOfFailedAttempts == 100)
+{
+    <p>You LOSE</p>
+}
+else
+{
+    <TableComponent numberOfColumns="3" numberOfRows="4" @bind-NumberOfFailedAttempts="NumberOfFailedAttempts" />
+}
+
+
+@code {
+    public int NumberOfFailedAttempts = 0;
+}
+

@@ -1,0 +1,25 @@
+﻿<p>Timer: @minutes : @seconds</p>
+
+@code {
+    private int seconds;
+    private int minutes;
+
+    protected override void OnInitialized()
+    {
+        System.Timers.Timer timer = new System.Timers.Timer(1000); // 1000ms = 1 second
+        timer.Elapsed += (sender, e) => UpdateTime(); // Event handler
+        timer.AutoReset = true;
+        timer.Enabled = true;
+    }
+
+    private void UpdateTime()
+    {
+        seconds++;
+        if (seconds == 60)
+        {
+            seconds = 0;
+            minutes++;
+        }
+        InvokeAsync(() => StateHasChanged()); // Update the UI
+    }
+}

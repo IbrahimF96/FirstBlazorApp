@@ -1,0 +1,35 @@
+﻿@if (Card.IsFlipped)
+{
+    <img src="@Card.ImageURL" class="anime-card-image" @onclick="FlipCard" />
+}
+else
+{
+    <div class="anime-card-back-container" @onclick="FlipCard">
+        <img src="/images/Mountain.png" class="anime-card-image" />
+        <div class="anime-card-text">
+            Anime
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public AnimeCard Card { get; set; }
+
+    [Parameter]
+    public bool MatchingInProgress { get; set; }
+
+    [Parameter]
+    public EventCallback<AnimeCard> OnCardFlipped { get; set; }
+
+    private void FlipCard()
+    {
+        if (!MatchingInProgress && !Card.HasMatched)
+        {
+            Card.IsFlipped = !Card.IsFlipped; // Update card state to flipped or unflipped
+
+        }
+        OnCardFlipped.InvokeAsync(Card); // Notify parent component about the flipped card
+    }
+}

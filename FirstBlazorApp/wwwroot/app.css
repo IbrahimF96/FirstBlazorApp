@@ -1,0 +1,141 @@
+html, body {
+    font-family: 'Yoshida Sans Black Condensed', sans-serif;
+    margin: 0;
+    background-color: rgb(20, 23, 26);
+    color: white;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+article{
+    padding: 0;
+}
+
+.main-Title {
+    font-size: 53px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-description {
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 18px;
+}
+
+.progress-bar {
+    position: relative;
+    width: 100%;
+    height: 1em;
+    background-color: rgb(66, 67, 70);
+    border-radius: 0.5em;
+    margin-bottom: 20px;
+}
+
+    .progress-bar::before {
+        content: '';
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: .15em;
+        top: .15em;
+        bottom: .15em;
+        width: calc(var(--width, 0) * 1%);
+        min-width: 0;
+        max-width: calc(100% - 0.3em);
+        background-color: white;
+        border-radius: 0.5em;
+    }
+
+.progress-left {
+    align-self: end;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.progress-right {
+    text-align: right;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.progress-top-line {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.game-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    margin-top: 40px;
+}
+
+.anime-card-back-container {
+    position: relative;
+    border-radius: 5px;
+    height: 100px;
+    object-fit: cover;
+    width: 100px;
+}
+
+.anime-card-text {
+    position: absolute;
+    font-weight: bold;
+    font-size: 8px;
+    top: 25px;
+    left: 35px;
+    color: rgb(100, 86, 84);
+}
+
+
+.anime-card-image {
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    width: 100px;
+}
+
+@media screen and (max-width: 400px) {
+    .anime-card-back-container, .anime-card-image {
+        /* Adjust the size for larger screens */
+        width: 80px;
+        height: 100px;
+    }
+}
+
+@media screen and (min-width: 540px) {
+    .anime-card-back-container, .anime-card-image {
+        /* Adjust the size for larger screens */
+        width: 150px;
+        height: 125px;
+    }
+}
+
+@media screen and (min-width: 700px) {
+    .anime-card-back-container, .anime-card-image {
+        /* Adjust the size for larger screens */
+        width: 200px;
+        height: 150px;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .anime-card-back-container, .anime-card-image {
+        /* Adjust the size for larger screens */
+        width: 250px;
+        height: 200px;
+    }
+}
+
+
+/* Media query for even larger screens */
+@media screen and (min-width: 1200px) {
+    .anime-card-back-container, .anime-card-image {
+        /* Adjust the size for even larger screens */
+        width: 350px;
+        height: 250px;
+    }
+}

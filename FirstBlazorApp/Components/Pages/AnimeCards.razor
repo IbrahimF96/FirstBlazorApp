@@ -1,0 +1,30 @@
+﻿@page "/animecards"
+@rendermode InteractiveServer
+
+<div class="main-Title">
+    Memory match
+</div>
+<div class="game-description">
+    You have 15 attempts to match all new flavours.
+</div>
+<div class="progress-bar-section">
+    <div class="progress-stats">
+        <div class="progress-tracker">
+            Attempts
+        </div>
+        <div class="progress-number">
+            5/15
+        </div>
+    </div>
+    <div class="progress">
+        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+@*     <TimerComponent /> *@
+<TableComponent numberOfColumns="3" numberOfRows="4" />
+
+
+@code {
+    public int DAMN = 1;
+    // Other logic in the AnimeCards component...
+}
