@@ -1,131 +1,55 @@
 ﻿@inject IAnimeCardService AnimeCardService
 
-@if (NumberOfMatches != 6)
+
+@if (Cards is not null)
 {
-    <div class="game-container">
-        @for (int i = 0; i < numberOfRows; i++)
-        {
-            @for (int j = 0; j < numberOfColumns; j++)
+    @if (NumberOfMatches != 6)
+    {
+        <div class="game-container">
+            @foreach (AnimeCardDTO card in Cards)
             {
-                var index = i * numberOfColumns + j;
-                var card = Cards[index];
                 <CardComponent Card="card" OnCardFlipped="HandleCardFlipped" MatchingInProgress="matchingInProgress" />
             }
-        }
-    </div>
+        </div>
+    }
+    else
+    {
+        <p>@Message</p>
+    }
 }
 else
 {
-    <p>@Message</p>
+    <p>Loading...</p>
 }
 
 
+
+
 @code {
-    [Parameter]
-    public int numberOfColumns { get; set; }
-    [Parameter]
-    public int numberOfRows { get; set; }
     [Parameter]
     public int NumberOfFailedAttempts { get; set; }
 
     [Parameter]
     public EventCallback<int> NumberOfFailedAttemptsChanged { get; set; }
 
-    List<AnimeCard> Cards = new();
+    List<AnimeCardDTO> Cards;
 
     private bool matchingInProgress = false; // Flag to track if matching is in progress
 
     private int NumberOfMatches;
 
-
-    List<AnimeCard> cardsToMatch = new List<AnimeCard>(); // Track flipped cards
+    List<AnimeCardDTO> cardsToMatch = new List<AnimeCardDTO>(); // Track flipped cards
 
     string Message = "Game Over, you won!";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        AnimeCard _OnePieceCard1 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp12821652.jpg",
-                Anime = AnimeSeries.OnePiece
-            };
-        AnimeCard _OnePieceCard2 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp12821652.jpg",
-                Anime = AnimeSeries.OnePiece
-            };
-        AnimeCard _NarutoCard1 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp4789300.jpg",
-                Anime = AnimeSeries.Naruto
-            };
-        AnimeCard _NarutoCard2 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp4789300.jpg",
-                Anime = AnimeSeries.Naruto
-            };
-        AnimeCard _DBZCard1 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp6088968.jpg",
-                Anime = AnimeSeries.DragonBallZ
-            };
-        AnimeCard _DBZCard2 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp6088968.jpg",
-                Anime = AnimeSeries.DragonBallZ
-            };
-        AnimeCard _BleachCard1 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp8006814.jpg",
-                Anime = AnimeSeries.Bleach
-            };
-        AnimeCard _BleachCard2 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp8006814.jpg",
-                Anime = AnimeSeries.Bleach
-            };
-
-        AnimeCard _JJKCard1 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp9137385.jpg",
-                Anime = AnimeSeries.JujutsuKaisen
-            };
-        AnimeCard _JJKCard2 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp9137385.jpg",
-                Anime = AnimeSeries.JujutsuKaisen
-            };
-
-        AnimeCard _DemonSlayerCard1 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp7854208.jpg",
-                Anime = AnimeSeries.DemonSlayer
-            };
-        AnimeCard _DemonSlayerCard2 = new()
-            {
-                Id = Guid.NewGuid(),
-                ImageURL = "https://wallpapercave.com/dwp1x/wp7854208.jpg",
-                Anime = AnimeSeries.DemonSlayer
-            };
-
-        Cards.AddRange(new List<AnimeCard>() { _BleachCard1, _BleachCard2, _DBZCard1, _DBZCard2, _DemonSlayerCard1, _DemonSlayerCard2, _JJKCard1, _JJKCard2, _OnePieceCard1, _OnePieceCard2, _NarutoCard1, _NarutoCard2 });
+        Cards = await AnimeCardService.GetCardsAsync();
         Shuffle(Cards);
-
     }
 
 
-    private void HandleCardFlipped(AnimeCard card)
+    private void HandleCardFlipped(AnimeCardDTO card)
     {
         if (matchingInProgress)
         {
@@ -134,7 +58,7 @@ else
 
         if (!card.HasMatched)
         {
-            UpdateCardsToMatch(card);
+            UpdateCardsToMatchList(card);
 
             if (cardsToMatch.Count == 2)
             {
@@ -157,7 +81,7 @@ else
         }
     }
 
-    void UpdateCardsToMatch(AnimeCard card)
+    void UpdateCardsToMatchList(AnimeCardDTO card)
     {
 
         if (card.IsFlipped)
@@ -183,9 +107,9 @@ else
 
         if (cardsToMatch[0].Anime == cardsToMatch[1].Anime)
         {
-            foreach (AnimeCard card in cardsToMatch)
+            foreach (AnimeCardDTO card in cardsToMatch)
             {
-                AnimeCard cardToUpdate = Cards.Find(c => c.Id == card.Id);
+                AnimeCardDTO cardToUpdate = Cards.Find(c => c.Id == card.Id);
                 if (cardToUpdate != null)
                 {
                     cardToUpdate.HasMatched = true;
@@ -202,9 +126,9 @@ else
             Timer resetTimer = new Timer(_ =>
             {
                 // Reset flipped state for unmatched cards
-                foreach (AnimeCard card in cardsToMatch)
+                foreach (AnimeCardDTO card in cardsToMatch)
                 {
-                    AnimeCard cardToUpdate = Cards.Find(c => c.Id == card.Id);
+                    AnimeCardDTO cardToUpdate = Cards.Find(c => c.Id == card.Id);
                     if (cardToUpdate != null)
                     {
                         cardToUpdate.IsFlipped = false;

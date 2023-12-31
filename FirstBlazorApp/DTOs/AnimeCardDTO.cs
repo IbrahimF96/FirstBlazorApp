@@ -1,4 +1,4 @@
-﻿using FirstBlazorApp.Models;
+﻿using FirstBlazorApp.Enums;
 
 namespace FirstBlazorApp.DTOs
 {

@@ -1,4 +1,6 @@
-﻿namespace FirstBlazorApp.Models
+﻿using FirstBlazorApp.Enums;
+
+namespace FirstBlazorApp.Models
 {
     public class AnimeCard
     {

@@ -1,4 +1,4 @@
-﻿namespace FirstBlazorApp.Models
+﻿namespace FirstBlazorApp.Enums
 {
     public enum AnimeSeries
     {

@@ -15,13 +15,13 @@ else
 
 @code {
     [Parameter]
-    public AnimeCard Card { get; set; }
+    public AnimeCardDTO Card { get; set; }
 
     [Parameter]
     public bool MatchingInProgress { get; set; }
 
     [Parameter]
-    public EventCallback<AnimeCard> OnCardFlipped { get; set; }
+    public EventCallback<AnimeCardDTO> OnCardFlipped { get; set; }
 
     private void FlipCard()
     {

@@ -78,15 +78,15 @@ article{
     border-radius: 5px;
     height: 100px;
     object-fit: cover;
-    width: 100px;
+    width: 110px;
 }
 
 .anime-card-text {
     position: absolute;
     font-weight: bold;
-    font-size: 8px;
-    top: 25px;
-    left: 35px;
+    font-size: 0.3em;
+    top: 25%;
+    left: 30%;
     color: rgb(100, 86, 84);
 }
 
@@ -95,7 +95,7 @@ article{
     height: 100px;
     object-fit: cover;
     border-radius: 5px;
-    width: 100px;
+    width: 110px;
 }
 
 @media screen and (max-width: 400px) {
@@ -103,6 +103,12 @@ article{
         /* Adjust the size for larger screens */
         width: 80px;
         height: 100px;
+    }
+
+    .anime-card-text{
+        top: 25%;
+        left:30%;
+        font-size: 0.3em;
     }
 }
 
@@ -114,7 +120,7 @@ article{
     }
 }
 
-@media screen and (min-width: 700px) {
+@media screen and (min-width: 740px) {
     .anime-card-back-container, .anime-card-image {
         /* Adjust the size for larger screens */
         width: 200px;

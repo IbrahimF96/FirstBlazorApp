@@ -1,0 +1,17 @@
+﻿<div class="progress-bar-section">
+    <div class="progress-top-line">
+        <div class="progress-left">
+            Attempts
+        </div>
+        <div class="progress-right">
+            @(NumberOfFailedAttempts / 10)/10
+        </div>
+    </div>
+    <div class="progress-bar" style="--width: @NumberOfFailedAttempts">
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int NumberOfFailedAttempts { get; set; }
+}
