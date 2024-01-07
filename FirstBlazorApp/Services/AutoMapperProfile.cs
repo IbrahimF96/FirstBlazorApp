@@ -11,6 +11,9 @@ namespace FirstBlazorApp.Services
         {
             CreateMap<AnimeCard, AnimeCardDTO>();
             CreateMap<AnimeCardDTO, AnimeCard>();
+
+            CreateMap<HighScore, HighScoreDTO>();
+            CreateMap<HighScoreDTO, HighScore>();
         }
     }
 }

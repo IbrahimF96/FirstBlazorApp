@@ -9,30 +9,32 @@ namespace FirstBlazorApp.Services
 {
     public class AnimeCardService : IAnimeCardService
     {
-        private readonly DataContext _context;
+        private readonly IDbContextFactory<GameDataContext> _dbFactory;
         private readonly IMapper _mapper;
 
-        public AnimeCardService(DataContext context, IMapper mapper)
+        public AnimeCardService(IDbContextFactory<GameDataContext> dbFactory, IMapper mapper)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _dbFactory = dbFactory ?? throw new ArgumentNullException(nameof(dbFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<List<AnimeCardDTO>> GetCardsAsync()
         {
-            var cards = await _context.AnimeCards.ToListAsync();
+            using var context = _dbFactory.CreateDbContext();
+            var cards = await context.AnimeCards.ToListAsync();
 
             if (!cards.Any())
             {
-                await SeedInitialCards();
-                cards = await _context.AnimeCards.ToListAsync();
+                await SeedInitialCards(context);
+                cards = await context.AnimeCards.ToListAsync();
+                context.Dispose();
             }
 
             List<AnimeCardDTO> _cardDtos = _mapper.Map<List<AnimeCardDTO>>(cards);
             return _cardDtos;
         }
 
-        private async Task SeedInitialCards()
+        private async Task SeedInitialCards(GameDataContext gameDataContext)
         {
             var defaultAnimeCards = new List<AnimeCard>
                 {
@@ -50,8 +52,8 @@ namespace FirstBlazorApp.Services
                     new AnimeCard { Id = Guid.NewGuid(), ImageURL = "https://wallpapercave.com/dwp1x/wp7854208.jpg", Anime = AnimeSeries.DemonSlayer }
                 };
 
-            _context.AnimeCards.AddRange(defaultAnimeCards);
-            await _context.SaveChangesAsync();
+            await gameDataContext.AnimeCards.AddRangeAsync(defaultAnimeCards);
+            await gameDataContext.SaveChangesAsync();
         }
 
     }

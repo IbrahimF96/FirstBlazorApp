@@ -3,6 +3,7 @@ using FirstBlazorApp.Components;
 using FirstBlazorApp.Data;
 using FirstBlazorApp.Services;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddDbContext<DataContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContextFactory<GameDataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 builder.Services.AddScoped<IAnimeCardService, AnimeCardService>();
+builder.Services.AddScoped<IHighScoreService, HighScoreService>();
 
 var mapperConfig = new MapperConfiguration(mc =>
 {

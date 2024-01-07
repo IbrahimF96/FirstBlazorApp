@@ -1,25 +1,27 @@
-﻿@inject IAnimeCardService AnimeCardService
-
+﻿@inject IAnimeCardService AnimeCardService;
+@inject IHighScoreService HighScoreService;
+@implements IDisposable
 
 @if (Cards is not null)
 {
-    @if (NumberOfMatches != 6)
+    @if (!IsGameOver)
     {
         <div class="game-container">
             @foreach (AnimeCardDTO card in Cards)
             {
-                <CardComponent Card="card" OnCardFlipped="HandleCardFlipped" MatchingInProgress="matchingInProgress" />
+                <CardComponent Card="card" OnCardFlipped="HandleCardFlippedAsync" MatchingInProgress="matchingInProgress" />
             }
         </div>
     }
     else
     {
-        <p>@Message</p>
+        <p class="Message">Well done, you won! Your score was @(1000 - (NumberOfFailedAttempts * 10)) </p>
+        <HighScoreTableComponent />
     }
 }
 else
 {
-    <p>Loading...</p>
+    <p class="Message">Loading...</p>
 }
 
 
@@ -27,42 +29,42 @@ else
 
 @code {
     [Parameter]
+    public HighScoreDTO? highScoreDto { get; set; }
+
+    [Parameter]
     public int NumberOfFailedAttempts { get; set; }
 
     [Parameter]
     public EventCallback<int> NumberOfFailedAttemptsChanged { get; set; }
 
-    List<AnimeCardDTO> Cards;
+    List<AnimeCardDTO> Cards = new();
 
     private bool matchingInProgress = false; // Flag to track if matching is in progress
 
-    private int NumberOfMatches;
+    private int NumberOfMatches = 0;
+
+    bool IsGameOver => NumberOfMatches == 6;
 
     List<AnimeCardDTO> cardsToMatch = new List<AnimeCardDTO>(); // Track flipped cards
 
-    string Message = "Game Over, you won!";
+    private Timer Timer;
 
     protected override async Task OnInitializedAsync()
     {
         Cards = await AnimeCardService.GetCardsAsync();
-        Shuffle(Cards);
+        // Shuffle(Cards);
     }
 
 
-    private void HandleCardFlipped(AnimeCardDTO card)
+    private async Task HandleCardFlippedAsync(AnimeCardDTO card)
     {
-        if (matchingInProgress)
-        {
-            return;
-        }
-
-        if (!card.HasMatched)
+        if (!matchingInProgress && !card.HasMatched)
         {
             UpdateCardsToMatchList(card);
 
             if (cardsToMatch.Count == 2)
             {
-                MatchCards();
+                await HandleMatchingCardsAsync();
             }
         }
     }
@@ -101,40 +103,64 @@ else
         }
     }
 
-    void MatchCards()
+    async Task HandleMatchingCardsAsync()
     {
         matchingInProgress = true;
 
         if (cardsToMatch[0].Anime == cardsToMatch[1].Anime)
         {
-            foreach (AnimeCardDTO card in cardsToMatch)
-            {
-                AnimeCardDTO cardToUpdate = Cards.Find(c => c.Id == card.Id);
-                if (cardToUpdate != null)
-                {
-                    cardToUpdate.HasMatched = true;
-                }
-            }
-
-            NumberOfMatches++;
-            cardsToMatch.Clear();
-            matchingInProgress = false;
-            InvokeAsync(() => StateHasChanged());
+            await MatchCardsAsync();
         }
         else
         {
-            Timer resetTimer = new Timer(_ =>
+            UnMatchCards();
+        }
+    }
+
+    void SaveHighScore()
+    {
+        if (highScoreDto is not null)
+        {
+            highScoreDto.Id = Guid.NewGuid();
+            highScoreDto.Score = 1000 - (NumberOfFailedAttempts * 10);
+
+            Task task = HighScoreService.AddScoreAsync(highScoreDto);
+        }
+    }
+
+    async Task MatchCardsAsync()
+    {
+        foreach (AnimeCardDTO card in cardsToMatch)
+        {
+            AnimeCardDTO? cardToUpdate = Cards.Find(c => c.Id == card.Id);
+            if (cardToUpdate != null)
             {
-                // Reset flipped state for unmatched cards
+                cardToUpdate.HasMatched = true;
+            }
+        }
+
+        NumberOfMatches++;
+        cardsToMatch.Clear();
+        matchingInProgress = false;
+        if (IsGameOver)
+        {
+            SaveHighScore();
+        }
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    void UnMatchCards()
+    {
+        Timer = new Timer(_ =>
+            {
                 foreach (AnimeCardDTO card in cardsToMatch)
                 {
-                    AnimeCardDTO cardToUpdate = Cards.Find(c => c.Id == card.Id);
+                    AnimeCardDTO? cardToUpdate = Cards.Find(c => c.Id == card.Id);
                     if (cardToUpdate != null)
                     {
                         cardToUpdate.IsFlipped = false;
                     }
                 }
-
                 cardsToMatch.Clear();
                 matchingInProgress = false;
                 NumberOfFailedAttempts += 10;
@@ -144,6 +170,11 @@ else
                     StateHasChanged();
                 });
             }, null, 500, Timeout.Infinite);
-        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        Timer?.Dispose();
+        Timer = null;
     }
 }

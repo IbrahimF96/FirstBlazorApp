@@ -1,0 +1,39 @@
+﻿@inject IHighScoreService HighScoreService
+<h3 class="TableHeader">High Scores</h3>
+
+@if (highScores is not null)
+{
+    <div class="TableContainer">
+        <table class="HighScoreTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var score in highScores)
+                {
+                    <tr>
+                        <td>@score.PlayerName</td>
+                        <td>@score.Score</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="Message">Loading...</p>
+}
+
+@code {
+
+    List<HighScoreDTO>? highScores { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        highScores = await HighScoreService.GetScoresAsync();
+        highScores = highScores.Take(10).ToList();
+    }
+}

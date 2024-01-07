@@ -3,14 +3,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FirstBlazorApp.Data
 {
-    public class DataContext : DbContext
+    public class GameDataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) 
+        public GameDataContext(DbContextOptions<GameDataContext> options) 
             : base(options)
         {
             
         }
 
         public DbSet<AnimeCard> AnimeCards { get; set; }
+
+        public DbSet<HighScore> HighScores { get; set; }
     }
 }
