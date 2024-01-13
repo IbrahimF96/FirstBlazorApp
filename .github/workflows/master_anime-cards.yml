@@ -40,12 +40,21 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-app
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6A0EACC0B9DF4E59AC8C71EF322387EE }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_1012CD1A3A9A46AAAB1706DCED3135FF }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_118D0FC7EE9E413BAEEFB5E44FA51745 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -53,5 +62,5 @@ jobs:
         with:
           app-name: 'anime-cards'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_54DC1E41ABEB40EB826490110A390980 }}
           package: .
+          
