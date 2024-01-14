@@ -52,7 +52,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         Cards = await AnimeCardService.GetCardsAsync();
-        // Shuffle(Cards);
+        Shuffle(Cards);
     }
 
 
