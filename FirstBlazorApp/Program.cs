@@ -13,13 +13,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContextFactory<GameDataContext>(options =>
 {
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(5, 7, 43)), options =>
-    {
-        options.EnableRetryOnFailure(
-            maxRetryCount: 5,
-            maxRetryDelay: TimeSpan.FromSeconds(10),
-            errorNumbersToAdd: null);
-    });
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(5, 7, 43)));
 });
 
 builder.Services.AddScoped<IAnimeCardService, AnimeCardService>();
