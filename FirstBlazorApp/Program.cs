@@ -3,7 +3,6 @@ using FirstBlazorApp.Components;
 using FirstBlazorApp.Data;
 using FirstBlazorApp.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +12,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContextFactory<GameDataContext>(options =>
 {
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(5, 7, 43)));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddScoped<IAnimeCardService, AnimeCardService>();
