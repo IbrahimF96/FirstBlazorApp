@@ -163,6 +163,7 @@ article {
 
 .label {
     margin-right: 10px;
+    font-size: 30px;
 }
 
 input {
@@ -171,6 +172,7 @@ input {
     color: white;
     width: 100%;
     padding-left: 10px;
+    font-size: 30px;
 }
 
 .input-container {
@@ -186,6 +188,7 @@ input {
     color: white;
     border-radius: 5px;
     padding: 5px 20px 5px 20px;
+    font-size: 30px;
 }
 
 .TableContainer {
