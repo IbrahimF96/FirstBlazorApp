@@ -64,6 +64,7 @@ article {
 .progress-top-line {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    margin-bottom: 5px;
 }
 
 .game-container {
@@ -163,7 +164,7 @@ article {
 
 .label {
     margin-right: 10px;
-    font-size: 16px;
+    font-size: 24px;
 }
 
 input {
