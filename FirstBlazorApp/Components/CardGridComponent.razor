@@ -38,7 +38,7 @@ else
     [Parameter]
     public EventCallback<int> NumberOfFailedAttemptsChanged { get; set; }
 
-    List<AnimeCardDTO> Cards = new();
+    List<AnimeCardDTO?> Cards;
 
     private bool matchingInProgress = false; // Flag to track if matching is in progress
 

@@ -25,11 +25,11 @@ else
 
     private void FlipCard()
     {
-        if (!MatchingInProgress && !Card.HasMatched)
+        if (!MatchingInProgress && !Card.HasMatched && !Card.IsFlipped)
         {
-            Card.IsFlipped = !Card.IsFlipped; // Update card state to flipped or unflipped
-
+            Card.IsFlipped = true; // Update card state to flipped
         }
+
         OnCardFlipped.InvokeAsync(Card); // Notify parent component about the flipped card
     }
 }
